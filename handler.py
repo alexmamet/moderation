@@ -26,11 +26,15 @@ BANNED_WORDS = [
     "school shooting",
 ]
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
+logger.info(f"Using device: {device}")
+
 logger.info("Loading model from HuggingFace...")
 tokenizer = AutoTokenizer.from_pretrained("mlgethoney/test")
 model = AutoModelForSequenceClassification.from_pretrained("mlgethoney/test")
+model = model.to(device)
 model.eval()
-logger.info("Model loaded successfully")
+logger.info(f"Model loaded successfully on {device}")
 
 
 def check_banned_words(text: str) -> tuple[bool, str]:
@@ -43,6 +47,7 @@ def check_banned_words(text: str) -> tuple[bool, str]:
 
 def get_toxicity_score(text: str) -> float:
     inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+    inputs = inputs.to(device)
 
     with torch.no_grad():
         logits = model(**inputs).logits.squeeze(0)
