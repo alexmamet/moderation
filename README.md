@@ -1,56 +1,52 @@
-# RunPod Text Moderation Serverless
+# Text Moderation Service
 
-Serverless text moderation service using BERT model on RunPod.
+FastAPI text moderation service with GPU support.
 
-## Features
+## Categories
 
-- Banned words check (20 critical terms)
-- ML toxicity classification using mlgethoney/test model
-- Returns unsafe if any logit > 0
-- CPU/GPU inference
+- **S1** (Violence): cannibalism, necro
+- **S2** (Hate Speech): discrimination
+- **S3** (Sexual Crimes): rape, zoo
+- **S4** (Minors): child_abuse, incest
+- **S11** (Self-Harm): suicide
 
-## Build and Deploy
+## Build and Run
 
 ```bash
-# Build Docker image
-docker build -t runpod-text-moderation .
-
-# Tag for registry
-docker tag runpod-text-moderation:latest <your-registry>/runpod-text-moderation:latest
-
-# Push to registry
-docker push <your-registry>/runpod-text-moderation:latest
+docker build -t text-moderation .
+docker run -p 8000:8000 --gpus all text-moderation
 ```
 
-Then deploy on RunPod using the image URL.
+## API
 
-## API Usage
-
-Input:
+POST /moderate
 ```json
 {
-  "input": {
-    "text": "Your text to moderate"
-  }
+  "text": "Your text to moderate"
 }
 ```
 
-Output:
+Response:
 ```json
 {
-  "result": "safe" | "unsafe",
-  "toxicity_score": 0.123,
-  "reason": "banned_word" (optional),
-  "matched_word": "..." (optional)
+  "result": "safe",
+  "categories": []
 }
 ```
 
-## Local Testing
+or
 
-```bash
-# Install dependencies
-uv pip install -r pyproject.toml
+```json
+{
+  "result": "unsafe",
+  "categories": ["S4", "S3"]
+}
+```
 
-# Run handler
-python handler.py
+GET /health
+```json
+{
+  "status": "ok",
+  "device": "cuda"
+}
 ```

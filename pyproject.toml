@@ -1,12 +1,15 @@
 [project]
-name = "runpod-text-moderation"
+name = "text-moderation"
 version = "0.1.0"
-description = "RunPod serverless text moderation"
+description = "Text moderation service with FastAPI"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
     "loguru>=0.7.3",
-    "runpod>=1.7.13",
     "torch>=2.0.0",
     "transformers>=4.30.0",
+    "pytest>=7.0.0",
+    "httpx>=0.24.0",
 ]

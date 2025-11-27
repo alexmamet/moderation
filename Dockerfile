@@ -1,13 +1,14 @@
-FROM runpod/base:0.6.3-cuda11.8.0
+FROM pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime
 
-RUN pip install --no-cache-dir uv
-RUN uv pip install 'huggingface_hub[cli,torch]' --system
+WORKDIR /app
 
-RUN hf download mlgethoney/test
+RUN pip install --no-cache-dir fastapi uvicorn transformers loguru
 
-COPY pyproject.toml .
-RUN uv pip install -r pyproject.toml --system
+RUN pip install --no-cache-dir huggingface_hub && \
+    huggingface-cli download mlgethoney/test
 
-COPY handler.py handler.py
+COPY main.py .
 
-CMD python3 -u /handler.py
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
