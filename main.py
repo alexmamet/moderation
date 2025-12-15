@@ -7,6 +7,15 @@ import re
 
 app = FastAPI()
 
+DEATH_TRIGGERS = [
+    "kys", "ky$", "k.y.s",
+    "killurself", "kill-yourself", "kill_yourself",
+    "unaliveyourself", "unalive-yourself",
+    "offyourself", "off-yourself",
+    "endyoursefl", "end-yourself",
+    "sewer-slide", "sewerslide", "sudoku-yourself",
+    "suicide", "die"
+]
 
 DEATH_PATTERN = re.compile(
     r'\b(' + '|'.join(re.escape(word) for word in DEATH_TRIGGERS) + r')\b',
