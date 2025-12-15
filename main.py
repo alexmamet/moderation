@@ -14,7 +14,7 @@ DEATH_TRIGGERS = [
     "offyourself", "off-yourself",
     "endyoursefl", "end-yourself",
     "sewer-slide", "sewerslide", "sudoku-yourself",
-    "suicide", "die"
+    "suicide", "die", "injure"
 ]
 
 DEATH_PATTERN = re.compile(
