@@ -7,40 +7,6 @@ import re
 
 app = FastAPI()
 
-INCEST_STOPWORDS = [
-    "mom", "mommy", "mother", "mum", "mummy", "mama",
-    "dad", "daddy", "father", "papa",
-    "sister", "sis", "stepsister",
-    "brother", "bro", "stepbrother",
-    "daughter", "stepdaughter",
-    "son", "stepson",
-    "grandma", "grandmother", "granny",
-    "grandpa", "grandfather", "granddad",
-    "aunt", "auntie",
-    "uncle",
-    "nephew", "niece",
-    "grandson", "granddaughter",
-    "stepmom", "stepmother",
-    "stepdad", "stepfather",
-    "cousin",
-    "mother-in-law", "father-in-law",
-    "sister-in-law", "brother-in-law",
-]
-
-DEATH_TRIGGERS = [
-    "kys", "ky$", "k.y.s",
-    "killurself", "kill-urself", "kill_yourself",
-    "unaliveyourself", "unalive-yourself",
-    "offyourself", "off-yourself",
-    "endyourself", "end-yourself",
-    "sewer-slide", "sewerslide", "sudoku-yourself",
-    "suicide", "die"
-]
-
-INCEST_PATTERN = re.compile(
-    r'\b(' + '|'.join(re.escape(word) for word in INCEST_STOPWORDS) + r')\b',
-    re.IGNORECASE
-)
 
 DEATH_PATTERN = re.compile(
     r'\b(' + '|'.join(re.escape(word) for word in DEATH_TRIGGERS) + r')\b',
@@ -77,9 +43,6 @@ class ModerationResponse(BaseModel):
     categories: list[str]
 
 
-def check_incest_stopwords(text: str) -> bool:
-    return bool(INCEST_PATTERN.search(text))
-
 
 def check_death_triggers(text: str) -> bool:
     return bool(DEATH_PATTERN.search(text))
@@ -106,11 +69,6 @@ def moderate(request: ModerationRequest):
 
     scores = get_category_scores(text)
     blocked_categories = [cat for cat, score in scores.items() if score > 0]
-
-    if check_incest_stopwords(text):
-        logger.info("Incest stopwords detected, adding S3")
-        if "S3" not in blocked_categories:
-            blocked_categories.append("S3")
 
     if check_death_triggers(text):
         logger.info("Death triggers detected, adding S11")
