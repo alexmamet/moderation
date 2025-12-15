@@ -12,7 +12,7 @@ DEATH_TRIGGERS = [
     "killurself", "kill-yourself", "kill_yourself",
     "unaliveyourself", "unalive-yourself",
     "offyourself", "off-yourself",
-    "endyoursefl", "end-yourself",
+    "endyourself", "end-yourself",
     "sewer-slide", "sewerslide", "sudoku-yourself",
     "suicide", "die", "injure"
 ]
