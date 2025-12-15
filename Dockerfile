@@ -5,7 +5,8 @@ WORKDIR /app
 RUN pip install uv
 
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev
+RUN --mount=type=cache,target=/root/.cache \
+    uv sync --frozen --no-dev
 
 COPY main.py .
 
